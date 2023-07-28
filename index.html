@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <div class="container">
+            <div class="content">
+                <input type="checkbox" id="copyCheckbox"><label for="copyCheckbox">複製到剪貼簿</label>
+                <button onclick="randomString1_12()">產生隨機1~12字串</button>
+                <br>
+                <span id="output"></span>
+            </div>
+        </div>
+    </body>
+    <script>
+        function randomIntFromInterval(min, max) { // min and max included 
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function randomString(num){
+            const encoder = new TextEncoder();
+            const decoder = new TextDecoder('gbk');
+            var str = "";
+
+            for(var i=0;i<num;i++){
+                var head = randomIntFromInterval(0xb0, 0xf7);
+                var body = randomIntFromInterval(0xa1, 0xf9);
+                let val = new Uint8Array([head, body]);
+                
+                let decoded = decoder.decode(val);
+                str += decoded;
+            }
+            return str;
+        }
+        function randomString1_12(){
+            let strLen = randomIntFromInterval(1, 12);
+            let randStr = randomString(strLen);
+            document.getElementById("output").textContent = randStr;
+
+            const copyCheckbox = document.getElementById("copyCheckbox");
+            if(copyCheckbox.checked){
+                copyToClipboard(randStr);
+            }
+        }
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
+    </script>
+    <style>
+        body {
+            background-color: #333; /* Set the desired dark background color */
+            color: #fff; /* Set the desired light text color */
+        }
+        .container {
+            display: grid;
+            place-items: center;
+            height: 100vh;
+        }
+    </style>
+    
+</html>
